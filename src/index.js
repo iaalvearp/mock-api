@@ -1,3 +1,46 @@
+// --- DATOS DE CATÁLOGO (Extraídos de tu script SQL) ---
+const CATALOGOS = {
+  clientes: [
+    { id: 1, nombre: 'cnel', nombre_completo: 'CORPORACION NACIONAL DE ELECTRICIDAD CNEL EP' }
+  ],
+  proyectos: [
+    { id: 1, nombre: 'CORP SERVICIO DE SOPORTE MANTENIMIENTO Y GARANTÍA DE LOS EQUIPOS DE NETWORKING HUAWEI DE CNEL EP GTI', cliente_id: 1 }
+  ],
+  provincias: [
+    { id: 9, nombre: 'GUAYAS' },
+    { id: 13, nombre: 'MANABI' }
+  ],
+  ciudades: [
+    { id: 1, nombre: 'MANTA', provincia_id: 13 },
+    { id: 2, nombre: 'PORTOVIEJO', provincia_id: 13 },
+    { id: 3, nombre: 'GUAYAQUIL', provincia_id: 9 },
+    { id: 4, nombre: 'DURAN', provincia_id: 9 }
+  ],
+  unidades_negocio: [
+    { id: 1, nombre: 'GUAYAS' },
+    { id: 2, nombre: 'GUAYAS - LOS RIOS' },
+    { id: 3, nombre: 'MANABI' }
+  ],
+  agencias: [
+    { id: 1, nombre: 'AGENCIA GUAYAQUIL', ciudad_id: 3, unidad_negocio_id: 1 },
+    { id: 2, nombre: 'AGENCIA GUAYACANES', ciudad_id: 3, unidad_negocio_id: 1 },
+    { id: 3, nombre: 'AGENCIA DURAN', ciudad_id: 4, unidad_negocio_id: 2 },
+    { id: 4, nombre: 'AGENCIA RECREO', ciudad_id: 4, unidad_negocio_id: 2 },
+    { id: 5, nombre: 'SUBESTACION MANTA 1', ciudad_id: 1, unidad_negocio_id: 3 },
+    { id: 6, nombre: 'EQUIPOS EN POSTE', ciudad_id: 1, unidad_negocio_id: 3 },
+    { id: 7, nombre: 'AGENCIA PRIZA', ciudad_id: 2, unidad_negocio_id: 3 },
+    { id: 8, nombre: 'AGENCIA PORTOVIEJO COMERCIAL', ciudad_id: 2, unidad_negocio_id: 3 }
+  ],
+  equipos: [
+    { id: '21980105812SJ4600371', nombre: 'SWITCH CAPA 2', modelo: 'S5720-28X-LI-AC', caracteristicas: '(24 Ethernet 10/100/1000 ports)', agencia_id: 1 },
+    { id: '210235G7J10K80001234', nombre: 'ROUTER PRINCIPAL', modelo: 'AR6120', caracteristicas: 'Router empresarial', agencia_id: 1 },
+    { id: '21980107133GJ7000257', nombre: 'SWITCH CAPA 3', modelo: 'S5730-68C-SI-AC', caracteristicas: '(48 Ethernet ports, 4 10 Gig SFP+)', agencia_id: 3 },
+    { id: '210211382810E8001895', nombre: 'ACCESS POINT', modelo: 'AP4050DN', caracteristicas: 'Wi-Fi 5', agencia_id: 5 },
+    { id: '2102351TPA10K9000012', nombre: 'FIREWALL', modelo: 'USG6620', caracteristicas: 'Firewall de próxima generación', agencia_id: 5 }
+  ]
+};
+
+
 // --- FUNCIONES DE AYUDA (Helpers) ---
 
 function obtenerCabecerasCORS(request) {
@@ -27,111 +70,103 @@ function crearRespuestaDeError(mensaje, status, corsHeaders) {
 async function manejarCreacionDeTarea(request, env, corsHeaders) {
   try {
     const nuevaTarea = await request.json();
-
-    if (!nuevaTarea.descripcion) {
-      return crearRespuestaDeError('La descripción de la tarea es obligatoria.', 400, corsHeaders);
-    }
-
-    const idTarea = `tarea_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-    const tareaAGuardar = {
-      id: idTarea,
-      descripcion: nuevaTarea.descripcion,
-      estado: 'pendiente'
-    };
-
+    const idTarea = `tarea_${Date.now()}`;
+    const tareaAGuardar = { id: idTarea, ...nuevaTarea, estado: 'Creado' };
     await env.TAREAS_KV.put(idTarea, JSON.stringify(tareaAGuardar));
-
     return crearRespuestaJSON(tareaAGuardar, corsHeaders);
-
   } catch (error) {
     return crearRespuestaDeError('Error al procesar la petición. Asegúrate de enviar un JSON válido.', 400, corsHeaders);
   }
 }
 
-/**
- * ¡NUEVA FUNCIÓN!
- * Maneja las peticiones para obtener la lista de todas las tareas.
- * @param {any} env - El entorno del Worker, que contiene nuestro KV.
- * @param {Object} corsHeaders - Las cabeceras CORS.
- * @returns {Promise<Response>} La respuesta con la lista de tareas.
- */
 async function manejarListadoDeTareas(env, corsHeaders) {
   try {
-    // 1. Pedimos a nuestra "pizarra" la lista de todas las "llaves" (IDs) que tiene guardadas.
-    const listaDeLlaves = await env.TAREAS_KV.list();
-
-    // 2. Si no hay llaves, devolvemos un arreglo vacío.
-    if (listaDeLlaves.keys.length === 0) {
-      return crearRespuestaJSON([], corsHeaders);
-    }
-
-    // 3. Creamos una lista de "promesas". Por cada llave, prometemos ir a buscar su valor.
-    const promesasDeTareas = listaDeLlaves.keys.map(key => env.TAREAS_KV.get(key.name));
-
-    // 4. Esperamos a que todas las promesas se cumplan a la vez (es más rápido).
-    const valoresDeTareas = await Promise.all(promesasDeTareas);
-
-    // 5. Los valores están como texto. Los convertimos de vuelta a objetos JSON.
-    const tareas = valoresDeTareas.map(valor => JSON.parse(valor));
-
-    // 6. Devolvemos la lista completa de tareas.
+    const listaDeLlaves = await env.TAREAS_KV.list({ prefix: 'tarea_' });
+    if (listaDeLlaves.keys.length === 0) return crearRespuestaJSON([], corsHeaders);
+    const promesas = listaDeLlaves.keys.map(key => env.TAREAS_KV.get(key.name));
+    const valores = await Promise.all(promesas);
+    const tareas = valores.map(v => JSON.parse(v));
     return crearRespuestaJSON(tareas, corsHeaders);
-
   } catch (error) {
-    console.error(error); // Guardamos el error real en los logs de Cloudflare
     return crearRespuestaDeError('Hubo un error al obtener las tareas.', 500, corsHeaders);
   }
 }
+
+async function manejarCargaDeCatalogos(env, corsHeaders) {
+  try {
+    const promesasDeCarga = Object.entries(CATALOGOS).map(([nombre, datos]) => {
+      const llave = `catalog:${nombre}`;
+      return env.TAREAS_KV.put(llave, JSON.stringify(datos));
+    });
+    await Promise.all(promesasDeCarga);
+    return crearRespuestaJSON({ status: 'ok', mensaje: `Se cargaron ${promesasDeCarga.length} catálogos.` }, corsHeaders);
+  } catch (error) {
+    return crearRespuestaDeError('Error al cargar los catálogos en KV.', 500, corsHeaders);
+  }
+}
+
+async function manejarPeticionDeCatalogo(nombreCatalogo, url, env, corsHeaders) {
+  const llave = `catalog:${nombreCatalogo}`;
+  const catalogoJSON = await env.TAREAS_KV.get(llave);
+
+  if (!catalogoJSON) {
+    return crearRespuestaDeError(`El catálogo '${nombreCatalogo}' no fue encontrado.`, 404, corsHeaders);
+  }
+
+  let catalogo = JSON.parse(catalogoJSON);
+
+  // --- LÓGICA DE FILTRADO MEJORADA ---
+  const params = url.searchParams;
+
+  if (nombreCatalogo === 'proyectos' && params.has('cliente_id')) {
+    catalogo = catalogo.filter(item => item.cliente_id == params.get('cliente_id'));
+  }
+  if (nombreCatalogo === 'ciudades' && params.has('provincia_id')) {
+    catalogo = catalogo.filter(item => item.provincia_id == params.get('provincia_id'));
+  }
+  if (nombreCatalogo === 'agencias' && params.has('ciudad_id')) {
+    catalogo = catalogo.filter(item => item.ciudad_id == params.get('ciudad_id'));
+  }
+  if (nombreCatalogo === 'equipos' && params.has('agencia_id')) {
+    catalogo = catalogo.filter(item => item.agencia_id == params.get('agencia_id'));
+  }
+
+  return crearRespuestaJSON(catalogo, corsHeaders);
+}
+
 
 // --- PUNTO DE ENTRADA PRINCIPAL (Router) ---
 
 export default {
   async fetch(request, env, ctx) {
     const corsHeaders = obtenerCabecerasCORS(request);
-
-    if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: corsHeaders });
-    }
+    if (request.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
     const url = new URL(request.url);
+    const path = url.pathname;
 
-    // --- RUTA DE LOGIN (Sin cambios) ---
-    if (url.pathname.startsWith('/auth/login')) {
+    if (path.startsWith('/auth/login')) {
       if (request.method === 'POST') {
-        const loginResponse = {
-          tokens: { access_token: "TOKEN-FIJO-GENERADO-POR-MI-API-MOCK-EN-CLOUDFLARE" }
-        };
+        const loginResponse = { tokens: { access_token: "TOKEN-FIJO-GENERADO-POR-MI-API-MOCK-EN-CLOUDFLARE" } };
         return crearRespuestaJSON(loginResponse, corsHeaders);
       }
     }
 
-    // --- RUTA DE TAREAS ---
-    if (url.pathname.startsWith('/tareas')) {
-      // ¡LÓGICA ACTUALIZADA! SI ES UN GET, DEVOLVEMOS LA LISTA REAL
-      if (request.method === 'GET') {
-        return await manejarListadoDeTareas(env, corsHeaders);
-      }
-
-      // SI ES UN POST, CREAMOS UNA TAREA NUEVA
-      if (request.method === 'POST') {
-        return await manejarCreacionDeTarea(request, env, corsHeaders);
-      }
+    if (path.startsWith('/tareas')) {
+      if (request.method === 'GET') return await manejarListadoDeTareas(env, corsHeaders);
+      if (request.method === 'POST') return await manejarCreacionDeTarea(request, env, corsHeaders);
     }
 
-    // --- RUTA POR DEFECTO ---
-    return new Response('API Mock activa. Usa /auth/login (POST) o /tareas (GET/POST).', {
-      headers: corsHeaders,
-    });
+    if (path === '/seed-catalogs') {
+      return await manejarCargaDeCatalogos(env, corsHeaders);
+    }
+
+    const matchCatalogo = path.match(/^\/(clientes|proyectos|provincias|ciudades|unidades_negocio|agencias|equipos)/);
+    if (matchCatalogo) {
+      const nombreCatalogo = matchCatalogo[1];
+      return await manejarPeticionDeCatalogo(nombreCatalogo, url, env, corsHeaders);
+    }
+
+    return new Response('API Mock activa. Catálogos disponibles.', { headers: corsHeaders });
   },
 };
-/*
-
-**Siguientes Pasos:**
-
-1.  **Guarda** el archivo `index.js`.
-2.  **Despliega** tus cambios:
-    ```bash
-    npm run deploy
-    
-*/
