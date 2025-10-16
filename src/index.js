@@ -1,3 +1,4 @@
+// api-mock/src/index.js
 // --- DATOS DE CATÁLOGO (Extraídos de tu script SQL) ---
 const CATALOGOS = {
   clientes: [
@@ -37,6 +38,10 @@ const CATALOGOS = {
     { id: '21980107133GJ7000257', nombre: 'SWITCH CAPA 3', modelo: 'S5730-68C-SI-AC', caracteristicas: '(48 Ethernet ports, 4 10 Gig SFP+)', agencia_id: 3 },
     { id: '210211382810E8001895', nombre: 'ACCESS POINT', modelo: 'AP4050DN', caracteristicas: 'Wi-Fi 5', agencia_id: 5 },
     { id: '2102351TPA10K9000012', nombre: 'FIREWALL', modelo: 'USG6620', caracteristicas: 'Firewall de próxima generación', agencia_id: 5 }
+  ],
+  tecnicos: [
+    { id: 101, nombre: 'Juan Perez' },
+    { id: 102, nombre: 'Maria Lopez' }
   ]
 };
 
@@ -46,7 +51,7 @@ const CATALOGOS = {
 function obtenerCabecerasCORS(request) {
   return {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Max-Age': '86400',
     'Access-Control-Allow-Headers': request.headers.get('Access-Control-Request-Headers'),
   };
@@ -79,13 +84,44 @@ async function manejarCreacionDeTarea(request, env, corsHeaders) {
   }
 }
 
+async function manejarEdicionDeTarea(request, tareaId, env, corsHeaders) {
+  try {
+    const tareaExistenteJSON = await env.TAREAS_KV.get(tareaId);
+    if (!tareaExistenteJSON) {
+      return crearRespuestaDeError('La tarea que intenta editar no existe.', 404, corsHeaders);
+    }
+    const datosActualizados = await request.json();
+    const tareaExistente = JSON.parse(tareaExistenteJSON);
+    const tareaActualizada = { ...tareaExistente, ...datosActualizados, id: tareaId };
+    await env.TAREAS_KV.put(tareaId, JSON.stringify(tareaActualizada));
+    return crearRespuestaJSON(tareaActualizada, corsHeaders);
+  } catch (error) {
+    return crearRespuestaDeError('Error al procesar la petición de edición.', 400, corsHeaders);
+  }
+}
+
+async function manejarEliminacionDeTarea(tareaId, env, corsHeaders) {
+  try {
+    await env.TAREAS_KV.delete(tareaId);
+    return new Response(null, { status: 204, headers: corsHeaders });
+  } catch (error) {
+    return crearRespuestaDeError('Error al eliminar la tarea.', 500, corsHeaders);
+  }
+}
+
+
 async function manejarListadoDeTareas(env, corsHeaders) {
   try {
     const listaDeLlaves = await env.TAREAS_KV.list({ prefix: 'tarea_' });
     if (listaDeLlaves.keys.length === 0) return crearRespuestaJSON([], corsHeaders);
     const promesas = listaDeLlaves.keys.map(key => env.TAREAS_KV.get(key.name));
-    const valores = await Promise.all(promesas);
-    const tareas = valores.map(v => JSON.parse(v));
+    const valoresJson = await Promise.all(promesas);
+
+    // ¡CORRECCIÓN! Filtramos cualquier valor que sea null antes de intentar convertirlo.
+    const tareas = valoresJson
+      .filter(valor => valor !== null)
+      .map(valor => JSON.parse(valor));
+
     return crearRespuestaJSON(tareas, corsHeaders);
   } catch (error) {
     return crearRespuestaDeError('Hubo un error al obtener las tareas.', 500, corsHeaders);
@@ -108,16 +144,12 @@ async function manejarCargaDeCatalogos(env, corsHeaders) {
 async function manejarPeticionDeCatalogo(nombreCatalogo, url, env, corsHeaders) {
   const llave = `catalog:${nombreCatalogo}`;
   const catalogoJSON = await env.TAREAS_KV.get(llave);
-
   if (!catalogoJSON) {
     return crearRespuestaDeError(`El catálogo '${nombreCatalogo}' no fue encontrado.`, 404, corsHeaders);
   }
-
   let catalogo = JSON.parse(catalogoJSON);
 
-  // --- LÓGICA DE FILTRADO MEJORADA ---
   const params = url.searchParams;
-
   if (nombreCatalogo === 'proyectos' && params.has('cliente_id')) {
     catalogo = catalogo.filter(item => item.cliente_id == params.get('cliente_id'));
   }
@@ -130,13 +162,11 @@ async function manejarPeticionDeCatalogo(nombreCatalogo, url, env, corsHeaders) 
   if (nombreCatalogo === 'equipos' && params.has('agencia_id')) {
     catalogo = catalogo.filter(item => item.agencia_id == params.get('agencia_id'));
   }
-
   return crearRespuestaJSON(catalogo, corsHeaders);
 }
 
 
 // --- PUNTO DE ENTRADA PRINCIPAL (Router) ---
-
 export default {
   async fetch(request, env, ctx) {
     const corsHeaders = obtenerCabecerasCORS(request);
@@ -152,6 +182,17 @@ export default {
       }
     }
 
+    const matchTareaConId = path.match(/^\/tareas\/(tarea_.*)/);
+    if (matchTareaConId) {
+      const tareaId = matchTareaConId[1];
+      if (request.method === 'PUT') {
+        return await manejarEdicionDeTarea(request, tareaId, env, corsHeaders);
+      }
+      if (request.method === 'DELETE') {
+        return await manejarEliminacionDeTarea(tareaId, env, corsHeaders);
+      }
+    }
+
     if (path.startsWith('/tareas')) {
       if (request.method === 'GET') return await manejarListadoDeTareas(env, corsHeaders);
       if (request.method === 'POST') return await manejarCreacionDeTarea(request, env, corsHeaders);
@@ -161,12 +202,13 @@ export default {
       return await manejarCargaDeCatalogos(env, corsHeaders);
     }
 
-    const matchCatalogo = path.match(/^\/(clientes|proyectos|provincias|ciudades|unidades_negocio|agencias|equipos)/);
+    const matchCatalogo = path.match(/^\/(clientes|proyectos|provincias|ciudades|unidades_negocio|agencias|equipos|tecnicos)/);
     if (matchCatalogo) {
       const nombreCatalogo = matchCatalogo[1];
       return await manejarPeticionDeCatalogo(nombreCatalogo, url, env, corsHeaders);
     }
 
-    return new Response('API Mock activa. Catálogos disponibles.', { headers: corsHeaders });
+    return new Response('API Mock activa. Edición y eliminación disponibles.', { headers: corsHeaders });
   },
 };
+
