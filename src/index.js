@@ -1,47 +1,398 @@
-// api-mock/src/index.js
-// --- DATOS DE CATÁLOGO (Extraídos de tu script SQL) ---
+
 const CATALOGOS = {
-  clientes: [
-    { id: 1, nombre: 'cnel', nombre_completo: 'CORPORACION NACIONAL DE ELECTRICIDAD CNEL EP' }
+  roles: [
+    {
+      id: 1,
+      nombre: "Técnico Responsable"
+    },
+    {
+      id: 2,
+      nombre: "Supervisor"
+    },
+    {
+      id: 3,
+      nombre: "Administrador"
+    }
   ],
-  proyectos: [
-    { id: 1, nombre: 'CORP SERVICIO DE SOPORTE MANTENIMIENTO Y GARANTÍA DE LOS EQUIPOS DE NETWORKING HUAWEI DE CNEL EP GTI', cliente_id: 1 }
+  usuarios: [
+    {
+      id: 101,
+      nombre: "Ivan Coronel",
+      email: "ivan@creatic.com.ec",
+      password: "123",
+      rolId: 3
+    },
+    {
+      id: 102,
+      nombre: "Christian Vargas",
+      email: "christian@creatic.com.ec",
+      password: "123",
+      rolId: 3
+    },
+    {
+      id: 103,
+      nombre: "Douglas Ayapata",
+      email: "dayapata@creatic.com.ec",
+      password: "123",
+      rolId: 2
+    },
+    {
+      id: 104,
+      nombre: "Juan Carlos Viera",
+      email: "viera.asesoria@gmail.com",
+      password: "123",
+      rolId: 1
+    },
+    {
+      id: 105,
+      nombre: "Christian Vargas",
+      email: "christian@creatic.com.ec",
+      password: "456",
+      rolId: 1
+    }
+  ],
+  "clientes": [
+    {
+      id: 1,
+      nombre: "cnel",
+      nombreCompleto: "CORPORACION NACIONAL DE ELECTRICIDAD CNEL EP",
+      proyectos: [
+        {
+          id: 1,
+          nombre: "CORP SERVICIO DE SOPORTE MANTENIMIENTO Y GARANTÍA DE LOS EQUIPOS DE NETWORKING HUAWEI DE CNEL EP GTI"
+        }
+      ]
+    }
   ],
   provincias: [
-    { id: 9, nombre: 'GUAYAS' },
-    { id: 13, nombre: 'MANABI' }
+    {
+      id: 2,
+      nombre: "Bolívar"
+    },
+    {
+      id: 7,
+      nombre: "El Oro"
+    },
+    {
+      id: 8,
+      nombre: "Esmeraldas"
+    },
+    {
+      id: 9,
+      nombre: "Guayas"
+    },
+    {
+      id: 12,
+      nombre: "Los Ríos"
+    },
+    {
+      id: 13,
+      nombre: "Manabí"
+    },
+    {
+      id: 21,
+      nombre: "Sucumbíos"
+    },
+    {
+      id: 23,
+      nombre: "Santo Domingo"
+    },
+    {
+      id: 24,
+      nombre: "Santa Elena"
+    }
   ],
-  ciudades: [
-    { id: 1, nombre: 'MANTA', provincia_id: 13 },
-    { id: 2, nombre: 'PORTOVIEJO', provincia_id: 13 },
-    { id: 3, nombre: 'GUAYAQUIL', provincia_id: 9 },
-    { id: 4, nombre: 'DURAN', provincia_id: 9 }
+  estados: [
+    {
+      id: 1,
+      nombre: "pendiente"
+    },
+    {
+      id: 2,
+      nombre: "en progreso"
+    },
+    {
+      id: 3,
+      nombre: "completado"
+    }
   ],
-  unidades_negocio: [
-    { id: 1, nombre: 'GUAYAS' },
-    { id: 2, nombre: 'GUAYAS - LOS RIOS' },
-    { id: 3, nombre: 'MANABI' }
+  unidadesNegocio: [
+    { id: 1, nombre: "GUAYAS" },
+    { id: 2, nombre: "GUAYAS - LOS RIOS" },
+    { id: 3, nombre: "MANABI" }
   ],
-  agencias: [
-    { id: 1, nombre: 'AGENCIA GUAYAQUIL', ciudad_id: 3, unidad_negocio_id: 1 },
-    { id: 2, nombre: 'AGENCIA GUAYACANES', ciudad_id: 3, unidad_negocio_id: 1 },
-    { id: 3, nombre: 'AGENCIA DURAN', ciudad_id: 4, unidad_negocio_id: 2 },
-    { id: 4, nombre: 'AGENCIA RECREO', ciudad_id: 4, unidad_negocio_id: 2 },
-    { id: 5, nombre: 'SUBESTACION MANTA 1', ciudad_id: 1, unidad_negocio_id: 3 },
-    { id: 6, nombre: 'EQUIPOS EN POSTE', ciudad_id: 1, unidad_negocio_id: 3 },
-    { id: 7, nombre: 'AGENCIA PRIZA', ciudad_id: 2, unidad_negocio_id: 3 },
-    { id: 8, nombre: 'AGENCIA PORTOVIEJO COMERCIAL', ciudad_id: 2, unidad_negocio_id: 3 }
+  ubicacion: [
+    {
+      id: 9,
+      provincia: "GUAYAS",
+      ciudades: [
+        {
+          id: 3,
+          nombre: "GUAYAQUIL",
+          agencia: [
+            {
+              id: 1,
+              nombre: "AGENCIA GUAYAQUIL",
+              unidadNegocioId: 1
+            },
+            {
+              id: 2,
+              nombre: "AGENCIA GUAYACANES",
+              unidadNegocioId: 1
+            }
+          ]
+        },
+        {
+          id: 4,
+          nombre: "DURAN",
+          agencia: [
+            {
+              id: 1,
+              nombre: "AGENCIA DURAN",
+              unidadNegocioId: 2
+            },
+            {
+              id: 2,
+              nombre: "AGENCIA RECREO",
+              unidadNegocioId: 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 13,
+      provincia: "MANABI",
+      ciudades: [
+        {
+          id: 1,
+          nombre: "MANTA",
+          agencia: [
+            {
+              id: 1,
+              nombre: "SUBESTACION MANTA 1",
+              unidadNegocioId: 3
+            },
+            {
+              id: 2,
+              nombre: "EQUIPOS EN POSTE",
+              unidadNegocioId: 3
+            }
+          ]
+        },
+        {
+          id: 2,
+          nombre: "PORTOVIEJO",
+          agencia: [
+            {
+              id: 1,
+              nombre: "AGENCIA PRIZA",
+              unidadNegocioId: 3
+            },
+            {
+              id: 2,
+              nombre: "AGENCIA PORTOVIEJO COMERCIAL",
+              unidadNegocioId: 3
+            }
+          ]
+        }
+      ]
+    }
   ],
-  equipos: [
-    { id: '21980105812SJ4600371', nombre: 'SWITCH CAPA 2', modelo: 'S5720-28X-LI-AC', caracteristicas: '(24 Ethernet 10/100/1000 ports)', agencia_id: 1 },
-    { id: '210235G7J10K80001234', nombre: 'ROUTER PRINCIPAL', modelo: 'AR6120', caracteristicas: 'Router empresarial', agencia_id: 1 },
-    { id: '21980107133GJ7000257', nombre: 'SWITCH CAPA 3', modelo: 'S5730-68C-SI-AC', caracteristicas: '(48 Ethernet ports, 4 10 Gig SFP+)', agencia_id: 3 },
-    { id: '210211382810E8001895', nombre: 'ACCESS POINT', modelo: 'AP4050DN', caracteristicas: 'Wi-Fi 5', agencia_id: 5 },
-    { id: '2102351TPA10K9000012', nombre: 'FIREWALL', modelo: 'USG6620', caracteristicas: 'Firewall de próxima generación', agencia_id: 5 }
-  ],
-  tecnicos: [
-    { id: 101, nombre: 'Juan Perez' },
-    { id: 102, nombre: 'Maria Lopez' }
+  tiposEquipos: [
+    {
+      id: 1,
+      clienteId: 1,
+      proyectoId: 1,
+      provinciaId: 9,
+      ciudadId: 3,
+      unidadNegocioId: 1,
+      agenciaId: 1,
+      equipos: [
+        {
+          id: "21980107133GJ7000257",
+          nombre: "SWITCH CAPA 3",
+          modelo: "S5730-68C-SI-AC",
+          caracteristicas: "(48 Ethernet 10/100/1000 ports,4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        },
+        {
+          id: "21980105812SJ4600371",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        }
+      ]
+    },
+    {
+      id: 2,
+      clienteId: 1,
+      proyectoId: 1,
+      provinciaId: 9,
+      ciudadId: 3,
+      unidadNegocioId: 1,
+      agenciaId: 2,
+      equipos: [
+        {
+          id: "21980105812SJ4600293",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        },
+        {
+          id: "21980105812SJ4600373",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        }
+      ]
+    },
+    {
+      id: 3,
+      clienteId: 1,
+      proyectoId: 1,
+      provinciaId: 9,
+      ciudadId: 4,
+      unidadNegocioId: 2,
+      agenciaId: 1,
+      equipos: [
+        {
+          id: "21980105812SJ4600325",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        }
+      ]
+    },
+    {
+      id: 4,
+      clienteId: 1,
+      proyectoId: 1,
+      provinciaId: 9,
+      ciudadId: 4,
+      unidadNegocioId: 2,
+      agenciaId: 2,
+      equipos: [
+        {
+          id: "21980105812SJ4600297",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        }
+      ]
+    },
+    {
+      id: 5,
+      clienteId: 1,
+      proyectoId: 1,
+      provinciaId: 13,
+      ciudadId: 1,
+      unidadNegocioId: 3,
+      agenciaId: 1,
+      equipos: [
+        {
+          id: "21980105812SJ4600326",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        },
+        {
+          id: "21980105812SJ4600318",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        }
+      ]
+    },
+    {
+      id: 6,
+      clienteId: 1,
+      proyectoId: 1,
+      provinciaId: 13,
+      ciudadId: 1,
+      unidadNegocioId: 3,
+      agenciaId: 2,
+      equipos: [
+        {
+          id: "21980105812SJ4600315",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        }
+      ]
+    },
+    {
+      id: 7,
+      clienteId: 1,
+      proyectoId: 1,
+      provinciaId: 13,
+      ciudadId: 2,
+      unidadNegocioId: 3,
+      agenciaId: 1,
+      equipos: [
+        {
+          id: "21980107133GJ7000255",
+          nombre: "SWITCH CAPA 3",
+          modelo: "S5730-68C-SI-AC",
+          caracteristicas: "(48 Ethernet 10/100/1000 ports,4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        },
+        {
+          id: "21980105812SJ4600336",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        }
+      ]
+    },
+    {
+      id: 8,
+      clienteId: 1,
+      proyectoId: 1,
+      provinciaId: 13,
+      ciudadId: 2,
+      unidadNegocioId: 3,
+      agenciaId: 2,
+      equipos: [
+        {
+          id: "21980105812SJ4600332",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        },
+        {
+          id: "21980105812SJ4600322",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        },
+        {
+          id: "21980105812SJ4600338",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        },
+        {
+          id: "21980105812SJ4600317",
+          nombre: "SWITCH CAPA 2",
+          modelo: "S5720-28X-LI-AC",
+          caracteristicas: "(24 Ethernet 10/100/1000 ports, 4 10 Gig SFP+, AC 110/220V)",
+          estadoId: 1
+        }
+      ]
+    }
   ]
 };
 
@@ -211,4 +562,3 @@ export default {
     return new Response('API Mock activa. Edición y eliminación disponibles.', { headers: corsHeaders });
   },
 };
-
