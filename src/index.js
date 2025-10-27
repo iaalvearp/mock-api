@@ -51,7 +51,7 @@ const CATALOGOS = {
       rolId: 1
     }
   ],
-  "clientes": [
+  clientes: [
     {
       id: 1,
       nombre: "cnel",
@@ -426,7 +426,7 @@ function crearRespuestaDeError(mensaje, status, corsHeaders) {
 async function manejarCreacionDeTarea(request, env, corsHeaders) {
   try {
     const nuevaTarea = await request.json();
-    const idTarea = `tarea_${Date.now()}`;
+    const idTarea = `tarea_${crypto.randomUUID()}`;
     const tareaAGuardar = { id: idTarea, ...nuevaTarea, estado: 'Creado' };
     await env.TAREAS_KV.put(idTarea, JSON.stringify(tareaAGuardar));
     return crearRespuestaJSON(tareaAGuardar, corsHeaders);
@@ -528,8 +528,50 @@ export default {
 
     if (path.startsWith('/auth/login')) {
       if (request.method === 'POST') {
-        const loginResponse = { tokens: { access_token: "TOKEN-FIJO-GENERADO-POR-MI-API-MOCK-EN-CLOUDFLARE" } };
-        return crearRespuestaJSON(loginResponse, corsHeaders);
+        try {
+          // 1. Leemos el email y password que envía el frontend
+          const body = await request.json();
+          const { email, password } = body;
+
+          if (!email || !password) {
+            return crearRespuestaDeError('Email y password son requeridos', 400, corsHeaders);
+          }
+
+          // 2. Buscamos al usuario en nuestros catálogos
+          const user = CATALOGOS.usuarios.find(u => u.email === email && u.password === password);
+
+          // 3. Si no existe, devolvemos un error de credenciales
+          if (!user) {
+            return crearRespuestaDeError('Credenciales incorrectas', 401, corsHeaders);
+          }
+
+          // 4. Si existe, armamos la respuesta que el frontend SÍ espera
+          const loginResponse = {
+            tokens: {
+              access_token: `token-valido-para-${user.nombre.replace(' ', '-')}`
+            },
+            user: user // ¡Esta es la parte que faltaba!
+          };
+
+          return crearRespuestaJSON(loginResponse, corsHeaders);
+
+        } catch (error) {
+          return crearRespuestaDeError('Error procesando el login', 400, corsHeaders);
+        }
+      }
+    }
+
+    if (path === '/catalogs') {
+      if (request.method === 'GET') {
+        // Devuelve el objeto CATALOGOS completo definido al inicio de este script
+        return crearRespuestaJSON(CATALOGOS, corsHeaders);
+      }
+    }
+
+    if (path === '/catalogs') {
+      if (request.method === 'GET') {
+        // Devuelve el objeto CATALOGOS completo definido al inicio de este script
+        return crearRespuestaJSON(CATALOGOS, corsHeaders);
       }
     }
 
