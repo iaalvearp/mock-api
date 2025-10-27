@@ -199,6 +199,376 @@ const CATALOGOS = {
       ]
     }
   ],
+  actividadesPreventivo: [
+    {
+      id: 1,
+      nombre: "Limpieza y organización de racks, equipos y ventiladores.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 3, label: "Se realizó limpieza del lugar del equipo", value: "limpieza_lugar_equipo" },
+            { id: 4, label: "Equipo se encontraba fuera del rack", value: "equipo_fuera_rack" },
+            { id: 5, label: "Se encontraba con bastante suciedad", value: "bastante_suciedad" },
+            { id: 6, label: "Se limpio internamente", value: "limpieza_interna" },
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 1, label: "Equipo no se encontraba", value: "equipo_no_encontrado" },
+            { id: 2, label: "El  lugar del equipo se encontraba limpio y todo en orden", value: "lugar_limpio" },
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 2,
+      nombre: "Aplicación y ejecución del protocolo de mantenimiento.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 3, label: "Se realizó limpieza del lugar del equipo", value: "limpieza_lugar_equipo" },
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 1, label: "Equipo no se encontraba", value: "equipo_no_encontrado" },
+            { id: 2, label: "Equipo con errores", value: "equipo_con_errores" },
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 3,
+      nombre: "Solventar inconvenientes menores en caso de suscitarse o requerirlo.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 3, label: "Se liberó espacio en almacenamiento", value: "espacio_liberado" },
+            { id: 4, label: "Se eliminaron alarmas", value: "eliminaron_alarmas" },
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 1, label: "Equipo no se encontraba", value: "equipo_no_encontrado" },
+            { id: 2, label: "No se presentaron inconvenientes", value: "no_inconvenientes" },
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 4,
+      nombre: "Colocar etiqueta del mantenimiento correspondiente.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 3, label: "Se colocó la etiqueta", value: "etiqueta_colocada" },
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 1, label: "Equipo no se encontraba", value: "equipo_no_encontrado" },
+            { id: 2, label: "Se debe gestionar retiro del equipo", value: "gestionar_retiro" },
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 5,
+      nombre: "Peinado del cableado del equipo.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 3, label: "Se arregló el cableado", value: "cableado_arreglado" },
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 1, label: "Equipo no se encontraba", value: "equipo_no_encontrado" },
+            { id: 2, label: "Los cables estaban ordenados", value: "cables_ordenados" },
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 6,
+      nombre: "Verificar conexiones de datos y energía.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 2, label: "Las conexiones estaban correctas", value: "conexiones_correctas" },
+            { id: 3, label: "Faltaba la conexión a Tierra del equipo", value: "faltaba_conexion_tierra" },
+            { id: 4, label: "Se arreglo la conexión a tierra", value: "conexion_tierra_arreglada" },
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 1, label: "Equipo no se encontraba", value: "equipo_no_encontrado" },
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 7,
+      nombre: "Verificar alarmas visuales externas.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 2, label: "El equipo se encontra sin alarmas", value: "equipo_sin_alarmas" },
+            { id: 3, label: "Se corrigieron las alarmas", value: "alarmas_corregidas" },
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 1, label: "Equipo no se encontraba", value: "equipo_no_encontrado" },
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 8,
+      nombre: "Obtencion de Backup de configuracion del equipo.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 3, label: "Se sacó el Backup de los equipos", value: "saco_backup_equipos" },
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 1, label: "Equipo no se encontraba", value: "equipo_no_encontrado" },
+            { id: 2, label: "Equipo sin espacio de almacenamiento", value: "equipo_sin_almacenamiento" },
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "actividadesCorrectivo": [
+    {
+      id: 1,
+      nombre: "Diagnóstico, verificación y solución problemas en forma remota.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 2,
+      nombre: "Diagnóstico, verificación y solución problemas en sitio.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 3,
+      nombre: "Traslado de los equipos para reparación correctiva.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 4,
+      nombre: "Reemplazo de tarjetas o módulos ópticos.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 5,
+      nombre: "Reemplazo de equipos.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 6,
+      nombre: "En caso de ser necesario, instalar parche o upgrade del equipo.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 7,
+      nombre: "Troubleshooting en el caso de configuraciones.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    },
+    {
+      id: 8,
+      nombre: "Verificar que el problema fue resuelto, agregar al informe.",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 99, label: "Otros", value: "otros" }
+          ],
+          answerNo: [
+            { id: 98, label: "Otros", value: "otros" }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "tareasDiagnostico": [
+    {
+      id: 1,
+      nombre: "Revision de estado por comandos esta sin alarmas en \"display alarm active | include Major\" (AR2504H) / \"display alarm active | include Major\" (S5720)",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [{ id: 1, label: "Realizado", value: "realizado" }],
+          answerNo: []
+        }
+      ]
+    },
+    {
+      id: 2,
+      nombre: "Ejecucion de comando \"display health\" (AR2504H) / \"display environment\" ó \"displaytemperatureall\" (S5720) revisar que el campo STATUS este NORMAL ó CurrentTemperature debe estar entre los limites 0 a 60",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [{ id: 1, label: "Realizado", value: "realizado" }],
+          answerNo: []
+        }
+      ]
+    },
+    {
+      id: 3,
+      nombre: "Ejecucion de comando \"display health\" (AR2504H) /\"display power\" (S5720) revisar que el campo STATE presente informacion de las fuentes de poder instaladas en el equipo ó que presente NORMAL",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [{ id: 1, label: "Realizado", value: "realizado" }],
+          answerNo: []
+        }
+      ]
+    },
+    {
+      id: 4,
+      nombre: "Ejecucion de comando \"display health\" (AR2504H) / \"display fan verbose\" (S5720) revisar que el campo REGISTER presente informacion YES de los ventiladores que tengan los equipos ó que tenga status NORMAL",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [{ id: 1, label: "Realizado", value: "realizado" }],
+          answerNo: []
+        }
+      ]
+    },
+    {
+      id: 5,
+      nombre: "Ejecucion de comando \"display health\" (AR2504H) / \"display cpu-usage\" (S5720) revisar que el campo CPU USAGE presente informacion inferior a 80% en el equipo",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [{ id: 1, label: "Realizado", value: "realizado" }],
+          answerNo: []
+        }
+      ]
+    },
+    {
+      id: 6,
+      nombre: "Ejecucion de comando \"display health\" (AR2504H) / \"display memory-usage\" (S5720) revisar que el campo USED PERCENTAGE de Memoria presente informacion inferior a 60% en el equipo",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [{ id: 1, label: "Realizado", value: "realizado" }],
+          answerNo: []
+        }
+      ]
+    },
+    {
+      id: 7,
+      nombre: "Ejecucion de comando \"display health\" (AR2504H) / \"dir\" (S5720) revisar que el campo USED PERCENTAGE de Disco presente informacion inferior a 80% en el equipo ó al final revisar que el espacio libre en KB corresponda al 80%",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [{ id: 1, label: "Realizado", value: "realizado" }],
+          answerNo: []
+        }
+      ]
+    },
+    {
+      id: 8,
+      nombre: "Ejecucion de comando \\\"display device\\\" (AR2504H / S5720) revisar que las tarjetas esten con estados:",
+      type: "single_choice",
+      posiblesRespuestas: [
+        {
+          answerYes: [
+            { id: 1, label: "Online es PRESENT.", value: "online_es_present" },
+            { id: 2, label: "Power es POWERON.", value: "power_es_poweron" },
+            { id: 3, label: "Register es REGISTERED.", value: "register_es_registered" },
+            { id: 4, label: "Alarm es NORMAL.", value: "alarm_es_normal" }
+          ],
+          answerNo: []
+        }
+      ]
+    }
+  ],
   tiposEquipos: [
     {
       id: 1,
