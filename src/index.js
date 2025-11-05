@@ -1,125 +1,94 @@
 
 const CATALOGOS = {
   roles: [
-    {
-      id: 1,
-      nombre: "Técnico Responsable"
-    },
-    {
-      id: 2,
-      nombre: "Supervisor"
-    },
-    {
-      id: 3,
-      nombre: "Administrador"
-    }
+    { id: 1, nombre: 'Técnico Responsable' },
+    { id: 2, nombre: 'Supervisor' },
+    { id: 3, nombre: 'Administrador' },
   ],
   usuarios: [
-    {
-      id: 101,
-      nombre: "Ivan Coronel",
-      email: "ivan@creatic.com.ec",
-      password: "123",
-      rolId: 3
-    },
-    {
-      id: 102,
-      nombre: "Christian Vargas",
-      email: "christian@creatic.com.ec",
-      password: "123",
-      rolId: 3
-    },
-    {
-      id: 103,
-      nombre: "Douglas Ayapata",
-      email: "dayapata@creatic.com.ec",
-      password: "123",
-      rolId: 2
-    },
-    {
-      id: 104,
-      nombre: "Juan Carlos Viera",
-      email: "viera.asesoria@gmail.com",
-      password: "123",
-      rolId: 1
-    },
-    {
-      id: 105,
-      nombre: "Christian Vargas",
-      email: "christian@creatic.com.ec",
-      password: "456",
-      rolId: 1
-    }
+    { id: 101, nombre: 'Ivan Coronel', email: 'ivan@creatic.com.ec', password: '123', rolId: 3 },
+    { id: 102, nombre: 'Christian Vargas', email: 'christian@creatic.com.ec', password: '123', rolId: 3 },
+    { id: 103, nombre: 'Douglas Ayapata', email: 'dayapata@creatic.com.ec', password: '123', rolId: 2 },
+    { id: 104, nombre: 'Juan Carlos Viera', email: 'viera.asesoria@gmail.com', password: '123', rolId: 1 },
+    { id: 105, nombre: 'Christian Vargas', email: 'christian@creatic.com.ec', password: '456', rolId: 1 },
   ],
+
+  // --- ESTRUCTURAS CORREGIDAS Y APLANADAS ---
   clientes: [
     {
       id: 1,
-      nombre: "cnel",
-      nombreCompleto: "CORPORACION NACIONAL DE ELECTRICIDAD CNEL EP",
-      proyectos: [
-        {
-          id: 1,
-          nombre: "CORP SERVICIO DE SOPORTE MANTENIMIENTO Y GARANTÍA DE LOS EQUIPOS DE NETWORKING HUAWEI DE CNEL EP GTI"
-        }
-      ]
-    }
+      nombre: 'cnel',
+      nombreCompleto: 'CORPORACION NACIONAL DE ELECTRICIDAD CNEL EP',
+    },
   ],
-  provincias: [
-    {
-      id: 2,
-      nombre: "Bolívar"
-    },
-    {
-      id: 7,
-      nombre: "El Oro"
-    },
-    {
-      id: 8,
-      nombre: "Esmeraldas"
-    },
-    {
-      id: 9,
-      nombre: "Guayas"
-    },
-    {
-      id: 12,
-      nombre: "Los Ríos"
-    },
-    {
-      id: 13,
-      nombre: "Manabí"
-    },
-    {
-      id: 21,
-      nombre: "Sucumbíos"
-    },
-    {
-      id: 23,
-      nombre: "Santo Domingo"
-    },
-    {
-      id: 24,
-      nombre: "Santa Elena"
-    }
-  ],
-  estados: [
+
+  // EXTRAÍDO: 'proyectos' ahora es una lista plana
+  proyectos: [
     {
       id: 1,
-      nombre: "pendiente"
+      nombre: 'CORP SERVICIO DE SOPORTE MANTENIMIENTO Y GARANTÍA DE LOS EQUIPOS DE NETWORKING HUAWEI DE CNEL EP GTI',
+      contrato: 'CNEL-OFC-GJ-006-2024',
+      cliente_id: 1, // Añadido para referencia
     },
-    {
-      id: 2,
-      nombre: "en progreso"
-    },
-    {
-      id: 3,
-      nombre: "completado"
-    }
   ],
-  unidadesNegocio: [
-    { id: 1, nombre: "GUAYAS" },
-    { id: 2, nombre: "GUAYAS - LOS RIOS" },
-    { id: 3, nombre: "MANABI" }
+
+  provincias: [
+    { id: 2, nombre: 'Bolívar' },
+    { id: 7, nombre: 'El Oro' },
+    { id: 8, nombre: 'Esmeraldas' },
+    { id: 9, nombre: 'Guayas' },
+    { id: 12, nombre: 'Los Ríos' },
+    { id: 13, nombre: 'Manabí' },
+    { id: 21, nombre: 'Sucumbíos' },
+    { id: 23, nombre: 'Santo Domingo' },
+    { id: 24, nombre: 'Santa Elena' },
+  ],
+
+  // CREADO: 'ciudades' ahora es una lista plana (extraída de 'ubicacion')
+  ciudades: [
+    { id: 3, nombre: 'GUAYAQUIL', provincia_id: 9 },
+    { id: 4, nombre: 'DURAN', provincia_id: 9 },
+    { id: 1, nombre: 'MANTA', provincia_id: 13 },
+    { id: 2, nombre: 'PORTOVIEJO', provincia_id: 13 },
+  ],
+
+  // RENOMBRADO: de 'unidadesNegocio' a 'unidades_negocio'
+  unidades_negocio: [
+    { id: 1, nombre: 'GUAYAS' },
+    { id: 2, nombre: 'GUAYAS - LOS RIOS' },
+    { id: 3, nombre: 'MANABI' },
+  ],
+
+  // CREADO: 'agencias' ahora es una lista plana (extraída de 'ubicacion')
+  agencias: [
+    { id: 1, nombre: 'AGENCIA GUAYAQUIL', unidadNegocioId: 1, ciudad_id: 3 },
+    { id: 2, nombre: 'AGENCIA GUAYACANES', unidadNegocioId: 1, ciudad_id: 3 },
+    { id: 1, nombre: 'AGENCIA DURAN', unidadNegocioId: 2, ciudad_id: 4 },
+    { id: 2, nombre: 'AGENCIA RECREO', unidadNegocioId: 2, ciudad_id: 4 },
+    { id: 1, nombre: 'SUBESTACION MANTA 1', unidadNegocioId: 3, ciudad_id: 1 },
+    { id: 2, nombre: 'EQUIPOS EN POSTE', unidadNegocioId: 3, ciudad_id: 1 },
+    { id: 1, nombre: 'AGENCIA PRIZA', unidadNegocioId: 3, ciudad_id: 2 },
+    { id: 2, nombre: 'AGENCIA PORTOVIEJO COMERCIAL', unidadNegocioId: 3, ciudad_id: 2 },
+  ],
+
+  // CREADO: 'tecnicos' (filtrado de 'usuarios' con rolId: 1)
+  tecnicos: [
+    { id: 104, nombre: 'Juan Carlos Viera', email: 'viera.asesoria@gmail.com', password: '123', rolId: 1 },
+    { id: 105, nombre: 'Christian Vargas', email: 'christian@creatic.com.ec', password: '456', rolId: 1 },
+  ],
+
+  // RENOMBRADO Y SIMPLIFICADO: de 'tiposEquipos' a 'tipos_equipo'
+  tipos_equipo: [
+    { id: 1, nombre: 'SWITCH CAPA 3' },
+    { id: 2, nombre: 'SWITCH CAPA 2' },
+    // (Se pueden añadir más tipos de equipo aquí)
+  ],
+
+  // --- DATOS ADICIONALES (Sin cambios) ---
+  estados: [
+    { id: 1, nombre: 'pendiente' },
+    { id: 2, nombre: 'en progreso' },
+    { id: 3, nombre: 'completado' },
   ],
   ubicacion: [
     {
@@ -351,7 +320,7 @@ const CATALOGOS = {
     }
   ],
 
-  "actividadesCorrectivo": [
+  actividadesCorrectivo: [
     {
       id: 1,
       nombre: "Diagnóstico, verificación y solución problemas en forma remota.",
@@ -474,7 +443,7 @@ const CATALOGOS = {
     }
   ],
 
-  "tareasDiagnostico": [
+  tareasDiagnostico: [
     {
       id: 1,
       nombre: "Revision de estado por comandos esta sin alarmas en \"display alarm active | include Major\" (AR2504H) / \"display alarm active | include Major\" (S5720)",
